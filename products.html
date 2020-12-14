@@ -38,12 +38,12 @@
 		<div class="small-container">
 			<div class="row row-2">
 				<h2> All Products</h2>
-				<select>
-					<option>Default shorting</option>
-					<<option>Sort by price</option>
-						<option>Sort by popularity</option>
-						<option>Sort by rating</option>
-						<option>Sort by sale</option>
+				<select onchange="updateProducts(e)">
+					<option value="any">All Categories</option>
+					<!-- <option ></option> -->
+						<option value="clothings">Clothings</option>
+						<option value="electronics">Electronics</option>
+						<option value="foods">Foods</option>
 				</select>
 			</div>
 
@@ -208,67 +208,123 @@
 			</div>
 		</div>
 	</div>
-		<!--------------------footer------------------------->
-		<div class="footer">
-			<div class="container">
-				<div class="row">
-					<div class="footer-col-1">
-						<h3>Download Our App</h3>
-						<p>Download App For Android and ios phone.</p>
-						<div class="app-logo">
-							<img src="play-store.png">
-							<img src="app-store.jpg">
-						</div>
-					</div>
-					<div class="footer-col-2">
-						<img src="image/logo-white.png">
-						<p>Our purpose is to Sustainably Make the Pleasure and benefits of goods accessible to many.</p>
-					</div>
-					<div class="footer-col-3">
-						<h3>Usefull links</h3>
-						<ul>
-							<li>Coupons</li>
-							<li>Blog Post
-							<li>
-							<li>Return Policy
-							<li>
-							<li>Join Affiliate
-							<li>
-						</ul>
-					</div>
-					<div class="footer-col-4">
-						<h3>Follow us</h3>
-						<ul>
-							<li>Facebook</li>
-							<li>Twitter
-							<li>
-							<li>Instagram
-							<li>
-							<li>Youtube
-							<li>
-						</ul>
+	<div class="container">
+		From data bases
+		<div id="products-row" class="row">
+
+		</div>
+	</div>
+	<!--------------------footer------------------------->
+	<div class="footer">
+		<div class="container">
+			<div class="row">
+				<div class="footer-col-1">
+					<h3>Download Our App</h3>
+					<p>Download App For Android and ios phone.</p>
+					<div class="app-logo">
+						<img src="play-store.png">
+						<img src="app-store.jpg">
 					</div>
 				</div>
-				<hr>
-				<p class="copyright">copyright 2020</p>
+				<div class="footer-col-2">
+					<img src="image/logo-white.png">
+					<p>Our purpose is to Sustainably Make the Pleasure and benefits of goods accessible to many.</p>
+				</div>
+				<div class="footer-col-3">
+					<h3>Usefull links</h3>
+					<ul>
+						<li>Coupons</li>
+						<li>Blog Post
+						<li>
+						<li>Return Policy
+						<li>
+						<li>Join Affiliate
+						<li>
+					</ul>
+				</div>
+				<div class="footer-col-4">
+					<h3>Follow us</h3>
+					<ul>
+						<li>Facebook</li>
+						<li>Twitter
+						<li>
+						<li>Instagram
+						<li>
+						<li>Youtube
+						<li>
+					</ul>
+				</div>
 			</div>
+			<hr>
+			<p class="copyright">copyright 2020</p>
 		</div>
-		<!-----------js for toggle menu------------->
-		<script>
-			var MenuItems = document.getElementById("MenuItems");
+	</div>
+	<!-----------js for toggle menu------------->
+	<script>
+		var MenuItems = document.getElementById("MenuItems");
 
-			MenuItems.style.maxHeight = "0px";
+		MenuItems.style.maxHeight = "0px";
 
-			function menutoggle() {
-				if (MenuItems.style.maxHeight == "0px") {
-					MenuItems.style.maxHeight = "200px"
-				}
-				else {
-					MenuItems.style.maxHeight = "0px";
+		function menutoggle() {
+			if (MenuItems.style.maxHeight == "0px") {
+				MenuItems.style.maxHeight = "200px"
+			}
+			else {
+				MenuItems.style.maxHeight = "0px";
+			}
+		}
+	</script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		let products = []
+
+		function updateProducts(e) {
+			let temp = products.map(p => {
+				if (p.category === e.target.value ) {
+					return p
 				}
 			}
-		</script>
 
+			)
+			// 
+			let n = ``
+			temp.map(p => {
+				n = n + getdiv(p)
+			})
+			updateDiv(n)
+		}
+		function getProducts() {
+			axios.get('http://localhost/enamibia/products.php').then(({ data }) => {
+				products = data;
+				let n = ``
+				products.map(p => {
+					n = n + getdiv(p)
+				})
+				updateDiv(n)
+			})
+		}
+		getProducts()
+
+		function getdiv(p) {
+			return `
+		<div class="col-3">
+				<img src="${p.image}" width="100%" height="225">
+				<h4> ${p.name}</h4>
+				<div class="rating">
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star"></i>
+					<i class="fa fa-star-o"></i>
+				</div>
+				<p>N$${p.price}</p>
+			</div>`
+		}
+		function updateDiv(p) {
+			let productsDiv = document.getElementById('products-row')
+			productsDiv.innerHTML = p
+		}
+	</script>
 
 
 </body>
